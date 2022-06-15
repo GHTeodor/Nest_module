@@ -22,6 +22,10 @@ export class CreateCatDto {
   @IsNumber()
   age: number;
 
+  @Min(0)
+  @IsNumber()
+  likes: number;
+
   @IsBoolean()
   petPassport: boolean;
 

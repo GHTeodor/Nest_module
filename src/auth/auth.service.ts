@@ -11,6 +11,7 @@ import { User } from '@prisma/client';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserService } from '../user/user.service';
+import { constants } from '../constants/constants';
 
 @Injectable()
 export class AuthService {
@@ -50,5 +51,23 @@ export class AuthService {
     if (userDB && passEqual) return userDB;
 
     throw new UnauthorizedException({ message: 'Wrong email or password' });
+  }
+
+  async getVerifiedUserId(jwt: string): Promise<string | null> {
+    try {
+      const token = this._getTokenFromJWT(jwt);
+
+      const user = await this.jwtService.verify(token, {
+        publicKey: constants.PRIVATE_KEY,
+      });
+
+      return `${user.name}_${user.id}`;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private _getTokenFromJWT(jwt: string) {
+    return jwt.split(' ').pop();
   }
 }

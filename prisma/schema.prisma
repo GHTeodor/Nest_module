@@ -15,8 +15,9 @@ model User {
   email    String  @unique
   name     String
   city     String?
-  status   Boolean
-  age      Int
+  status   Boolean @default(false)
+  avatar   String?
+  age      Int     @default(18)
   password String
   cars     Car[]
   cats     Cat[]
@@ -38,7 +39,13 @@ model Cat {
   name        String
   color       String?
   age         Int
+  likes       Int
   petPassport Boolean @default(false)
   owner       User?   @relation(fields: [ownerId], references: [id])
   ownerId     Int?
 }
+
+// npx prisma generate // синхронізація схеми з базою
+// npx prisma migrate dev --name --create-only
+// npx prisma migrate dev --name init
+// prisma format  // check

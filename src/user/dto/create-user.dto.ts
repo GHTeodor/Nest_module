@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   Length,
 } from 'class-validator';
@@ -21,6 +22,10 @@ export class CreateUserDto {
 
   @IsNumber()
   age: number;
+
+  @IsString()
+  @IsOptional()
+  avatar: string;
 
   @IsString()
   city: string;

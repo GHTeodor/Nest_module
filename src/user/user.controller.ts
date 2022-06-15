@@ -8,14 +8,20 @@ import {
   Param,
   Post,
   Put,
+  Res,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '../auth/jwt-auth.guard';
+import { imageFileFilter } from '../utils/image.filter';
 
 @ApiTags()
 @Controller('users')
@@ -79,7 +85,41 @@ export class UserController {
 
   @HttpCode(HttpStatus.OK)
   @Put(':id')
-  updateOneById(@Param('id') id: string, @Body() userData: UpdateUserDto) {
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: diskStorage({
+        destination: './avatar',
+        filename: (req, file, callback) => {
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+
+          return callback(null, `${randomName}${file.originalname}`);
+        },
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
+  updateOneById(
+    @Param('id') id: string,
+    @Body() userData: UpdateUserDto,
+    @UploadedFile() avatar: Express.Multer.File,
+  ) {
+    let newAvatarPath: string = null;
+    try {
+      if (avatar) {
+        const randomName = Array(32)
+          .fill(null)
+          .map(() => Math.round(Math.random() * 16).toString(16))
+          .join('');
+        newAvatarPath = `avatar/${randomName}${avatar.originalname}`;
+      }
+
+      userData.avatar = newAvatarPath;
+    } catch (e) {
+      console.log(e);
+    }
     return this.userService.updateOneById(id, userData);
   }
 
@@ -88,4 +128,15 @@ export class UserController {
   deleteOneById(@Param('id') id: string) {
     return this.userService.deleteOneById(id);
   }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('avatar/:image_path')
+  watchFile(@Param('image_path') image, @Res() res) {
+    return res.sendFile(image, { root: './avatar' });
+  }
 }
+
+// const randomName = Array(32)
+//   .fill(null)
+//   .map(() => Math.round(Math.random() * 16).toString(16))
+//   .join('');
