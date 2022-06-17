@@ -26,6 +26,7 @@ export class CatService {
         name: catData.name,
         color: catData.color,
         petPassport: catData.petPassport,
+        avatar: catData.avatar,
       },
     });
   }

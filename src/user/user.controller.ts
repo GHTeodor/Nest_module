@@ -26,6 +26,8 @@ import { imageFileFilter } from '../utils/image.filter';
 @ApiTags()
 @Controller('users')
 export class UserController {
+  private static randomName: string;
+
   constructor(private userService: UserService) {}
 
   @HttpCode(HttpStatus.OK)
@@ -51,7 +53,7 @@ export class UserController {
           {
             id: 2,
             model: 'Tesla',
-            color: 'red',
+            color: 'green',
             country: 'USA',
             year: 2,
             isElectrocar: true,
@@ -88,14 +90,17 @@ export class UserController {
   @UseInterceptors(
     FileInterceptor('avatar', {
       storage: diskStorage({
-        destination: './avatar',
+        destination: './test/avatar',
         filename: (req, file, callback) => {
-          const randomName = Array(32)
+          UserController.randomName = Array(32)
             .fill(null)
             .map(() => Math.round(Math.random() * 16).toString(16))
             .join('');
 
-          return callback(null, `${randomName}${file.originalname}`);
+          return callback(
+            null,
+            `${UserController.randomName}${file.originalname}`,
+          );
         },
       }),
       fileFilter: imageFileFilter,
@@ -108,13 +113,8 @@ export class UserController {
   ) {
     let newAvatarPath: string = null;
     try {
-      if (avatar) {
-        const randomName = Array(32)
-          .fill(null)
-          .map(() => Math.round(Math.random() * 16).toString(16))
-          .join('');
-        newAvatarPath = `avatar/${randomName}${avatar.originalname}`;
-      }
+      if (avatar)
+        newAvatarPath = `avatar/${UserController.randomName}${avatar.originalname}`;
 
       userData.avatar = newAvatarPath;
     } catch (e) {
@@ -132,7 +132,7 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @Get('avatar/:image_path')
   watchFile(@Param('image_path') image, @Res() res) {
-    return res.sendFile(image, { root: './avatar' });
+    return res.sendFile(image, { root: './test/avatar' });
   }
 }
 

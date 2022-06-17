@@ -29,6 +29,7 @@ export class CarService {
         country: carData.country,
         year: carData.year,
         isElectrocar: carData.isElectrocar,
+        avatar: carData.avatar,
       },
     });
   }

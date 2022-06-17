@@ -28,6 +28,7 @@ model Car {
   model        String
   color        String?
   country      String
+  avatar       String?
   year         Int?
   isElectrocar Boolean @default(false)
   owner        User?   @relation(fields: [ownerId], references: [id])
@@ -39,6 +40,7 @@ model Cat {
   name        String
   color       String?
   age         Int
+  avatar      String?
   likes       Int
   petPassport Boolean @default(false)
   owner       User?   @relation(fields: [ownerId], references: [id])
@@ -46,6 +48,5 @@ model Cat {
 }
 
 // npx prisma generate // синхронізація схеми з базою
-// npx prisma migrate dev --name --create-only
 // npx prisma migrate dev --name init
 // prisma format  // check

@@ -8,16 +8,24 @@ import {
   Param,
   Post,
   Put,
+  Res,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 import { CatService } from './cat.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
+import { imageFileFilter } from '../utils/image.filter';
 
 @ApiTags()
 @Controller('cats')
 export class CatController {
+  private static randomName: string;
+
   constructor(private catService: CatService) {}
 
   @HttpCode(HttpStatus.OK)
@@ -54,7 +62,40 @@ export class CatController {
 
   @HttpCode(HttpStatus.OK)
   @Put(':id')
-  updateOneById(@Param('id') id: string, @Body() catData: UpdateCatDto) {
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: diskStorage({
+        destination: './test/avatar',
+        filename: (req, file, callback) => {
+          CatController.randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+
+          return callback(
+            null,
+            `${CatController.randomName}${file.originalname}`,
+          );
+        },
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
+  updateOneById(
+    @Param('id') id: string,
+    @Body() catData: UpdateCatDto,
+    @UploadedFile() avatar: Express.Multer.File,
+  ) {
+    let newAvatar: string = null;
+    try {
+      if (avatar)
+        newAvatar = `avatar/${CatController.randomName}${avatar.originalname}`;
+
+      catData.avatar = newAvatar;
+    } catch (e) {
+      console.log(e);
+    }
+
     return this.catService.updateOneById(id, catData);
   }
 
@@ -62,5 +103,11 @@ export class CatController {
   @Delete(':id')
   deleteOneById(@Param('id') id: string) {
     return this.catService.deleteOneById(id);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('avatar/:image_path')
+  watchFile(@Param('image_path') image, @Res() res) {
+    return res.sendFile(image, { root: './test/avatar' });
   }
 }
