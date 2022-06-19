@@ -1,0 +1,724 @@
+{
+	"info": {
+		"_postman_id": "117e6077-383a-4f9d-9fe6-32e0eff751b0",
+		"name": "Nest Sep-2021",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19629569"
+	},
+	"item": [
+		{
+			"name": "Lesson1",
+			"item": [
+				{
+					"name": "Posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"emailyk\",\r\n    \"email\": \"email@i.ua\",\r\n    \"age\": 10,\r\n    \"password\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"qui est esse\",\r\n    \"body\": \"body\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lesson2+",
+			"item": [
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "Users",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const userId = Number(pm.environment.get(\"user-id\"));\r",
+											"\r",
+											"pm.test(\"Check if user exists in list\", () => {\r",
+											"    const userList = pm.response.json();\r",
+											"    const findUser = userList.filter(user => user.id === userId);\r",
+											"    pm.expect(findUser[0].id).to.eql(userId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjFAaS51YSIsImlkIjo3LCJuYW1lIjoi0K_QvSIsImlhdCI6MTY1NTY0NzE2NywiZXhwIjoxNjU1NzMzNTY3fQ.M8MsXUd9T7tbxG6Mqygp-VnZySdqN2jbhRuKSyahPZc",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"user-id\", pm.response.json().id);\r",
+											"\r",
+											"pm.test(\"Correct response data\", () => {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.id).to.be.a('number');\r",
+											"    pm.expect(jsonData.email).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check name of user\", ()  => {\r",
+											"    const requestName = JSON.parse(pm.request.body).name;\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.name).to.be.a('string');\r",
+											"    pm.expect(jsonData.name).to.be.equal(requestName);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"example8@ukr.net\",\r\n  \"name\": \"Johnsonuk\",\r\n  \"city\": \"Lviv\",\r\n  \"status\": true,\r\n  \"age\": 10,\r\n  \"password\": \"superSecret\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateUser by{:id} + avatar",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"setTimeout(()=>{\r",
+											"    console.log(\"Pre-request waiting...\");\r",
+											"}, 1500)"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Correct response avatar\", () => {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    // pm.expect(jsonData.avatar).to.be.a('string');\r",
+											"    pm.expect(jsonData.email).to.be.a('string');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "avatar",
+											"type": "text"
+										},
+										{
+											"key": "age",
+											"value": "12",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "city",
+											"value": "Lviv",
+											"type": "text"
+										},
+										{
+											"key": "avatar",
+											"type": "file",
+											"src": "./test/avatar/User.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/users/{{user-id}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"{{user-id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Users/{{user-id}}",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const userId = pm.environment.get(\"user-id\");\r",
+											"\r",
+											"pm.test(\"Check user id\", () => {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.id).to.eql(Number(userId));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/users/{{user-id}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"{{user-id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cats",
+					"item": [
+						{
+							"name": "Cats",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/cats",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"cats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createCat",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Murkotyks\",\r\n    \"color\": \"silver\",\r\n    \"age\": 1,\r\n    \"likes\": 1,\r\n    \"petPassport\": true,\r\n    \"ownerId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/cats",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"cats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateCat by{:id}",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Murkotyk\",\r\n    \"color\": \"silver\",\r\n    \"petPassport\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/cats/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"cats",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cars",
+					"item": [
+						{
+							"name": "Cars",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/cars",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"cars"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createCar",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"model\": \"Tesla\",\r\n    \"color\": \"red\",\r\n    \"country\": \"USA\",\r\n    \"year\": 2000,\r\n    \"isElectrocar\": true,\r\n    \"ownerId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/cars",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"cars"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateCar by{:id}",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"color\": \"orange\",\r\n    \"country\": \"USA\",\r\n    \"year\": 2,\r\n    \"isElectrocar\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/cars/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"cars",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Registration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Ян\",\r\n    \"email\": \"1@i.ua\",\r\n    \"age\": 12,\r\n    \"city\": \"Lviv\",\r\n    \"status\": true,\r\n    \"password\": \"123123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/auth/registration",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"auth",
+										"registration"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "email",
+											"value": "qwerty@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "1234qwe",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Avatar",
+					"item": [
+						{
+							"name": ".PNG",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/cars/avatar/2d60312e31ff1a81bd7484309318f8baCat.jpg",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"cars",
+										"avatar",
+										"2d60312e31ff1a81bd7484309318f8baCat.jpg"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "userAvatar1",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"setTimeout(()=>{\r",
+											"    console.log(\"Pre-request waiting...\");\r",
+											"}, 1500)"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Correct response avatar\", () => {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.avatar).to.be.a('string');\r",
+											"    pm.expect(jsonData.email).to.be.a('string');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Ukrainier",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Kyiv",
+											"type": "text"
+										},
+										{
+											"key": "avatar",
+											"type": "file",
+											"src": "./test/avatar/User.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/users/5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "catAvatar1",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "mea",
+											"type": "text"
+										},
+										{
+											"key": "color",
+											"value": "red",
+											"type": "text"
+										},
+										{
+											"key": "avatar",
+											"type": "file",
+											"src": "./test/avatar/Cat.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/cats/6",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"cats",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "carAvatar1",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "country",
+											"value": "UA",
+											"type": "text"
+										},
+										{
+											"key": "color",
+											"value": "red",
+											"type": "text"
+										},
+										{
+											"key": "avatar",
+											"type": "file",
+											"src": "./test/avatar/Tesla.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/cars/3",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"cars",
+										"3"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
